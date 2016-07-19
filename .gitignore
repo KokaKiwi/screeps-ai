@@ -1,0 +1,11 @@
+# Build files
+dist/
+node_modules/
+typings/
+
+# Secret files
+secrets.json
+
+# Misc files
+.*
+!.gitignore

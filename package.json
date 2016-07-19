@@ -1,0 +1,26 @@
+{
+  "name": "screeps-ai",
+  "version": "0.1.0",
+  "description": "My Screeps AI",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/KokaKiwi/screeps-ai"
+  },
+  "keywords": [
+    "screeps",
+    "ai"
+  ],
+  "author": "KokaKiwi <kokakiwi@kokakiwi.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KokaKiwi/screeps-ai/issues"
+  },
+  "homepage": "https://github.com/KokaKiwi/screeps-ai",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-order": "^1.1.1",
+    "gulp-screeps": "^1.0.2",
+    "gulp-typescript": "^2.13.6"
+  }
+}
