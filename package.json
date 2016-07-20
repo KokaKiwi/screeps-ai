@@ -20,7 +20,8 @@
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
     "gulp-order": "^1.1.1",
-    "gulp-screeps": "^1.0.2",
-    "gulp-typescript": "^2.13.6"
+    "gulp-screeps": "file:gulp-screeps",
+    "gulp-typescript": "^2.13.6",
+    "yargs": "^4.8.1"
   }
 }

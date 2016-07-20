@@ -1,7 +1,8 @@
 var https = require('https');
-var gulp = require('gulp');
+var gulp = require('gulp'),
+    argv = require('yargs').argv;
 var ts = require('gulp-typescript'),
-    screeps = require('gulp-screeps');
+    screeps = require('./gulp-screeps');
 var secrets = require('./secrets.json');
 
 function upload(branch) {
@@ -14,13 +15,7 @@ function upload(branch) {
 }
 
 /* TypeScript */
-var tsProject = ts.createProject({
-    module: 'commonjs',
-    target: 'es5',
-    sourceMap: false,
-    noResolve: false,
-    noImplicitAny: false,
-});
+var tsProject = ts.createProject('tsconfig.json');
 
 gulp.task('ts-scripts', function() {
     return gulp.src(['src/**/*.ts', 'typings/**/*.ts'])
@@ -30,17 +25,13 @@ gulp.task('ts-scripts', function() {
 
 gulp.task('compile', ['ts-scripts']);
 
-/* Sim */
-gulp.task('upload-sim', ['compile'], function() {
-    return gulp.src('dist/**/*.js').pipe(upload('develop'));
-});
-gulp.task('watch-sim', function() {
-    gulp.watch('src/**/*.ts', ['upload-sim']);
-});
-
-/* Default */
+/* Upload */
 gulp.task('upload', ['compile'], function() {
-    return gulp.src('dist/**/*.js').pipe(upload('default'));
+    var branch = argv.prod ? 'default' : 'develop';
+    return gulp.src('dist/**/*.js').pipe(upload(branch));
+});
+gulp.task('watch', function() {
+    gulp.watch('src/**/*.ts', ['upload']);
 });
 
 gulp.task('default', ['compile']);

@@ -1,4 +1,15 @@
-declare var module: any;
+import City from './city';
 
-module.exports.loop = function() {
-};
+City.init();
+
+export function loop() {
+    /* Tick */
+    for (let city of City.cities) {
+        city.tick();
+    }
+
+    /* Save changes */
+    for (let city of City.cities) {
+        city.save();
+    }
+}
