@@ -19,11 +19,11 @@ function genModuleName(filePath) {
                .replace(new RegExp('\\' + path.sep, 'g'), '.');
 }
 
-function replaceRequires(code) {
+function replaceRequires(prefix, filePath, code) {
     var ast = recast.visit(recast.parse(code.toString()), {
-        visitCallExpression: function(path) {
-            var expr = path.node;
-            this.traverse(path);
+        visitCallExpression: function(nodePath) {
+            var expr = nodePath.node;
+            this.traverse(nodePath);
 
             if (expr.callee.name != 'require' ||
                 expr.arguments.length == 0) {
@@ -37,7 +37,9 @@ function replaceRequires(code) {
 
             var quote = modulePathArg.raw.charAt(0);
 
-            var modulePath = modulePathArg.value.substr(2);
+            var modulePath = path.relative(prefix,
+                                path.resolve(path.dirname(filePath),
+                                    modulePathArg.value));
             var moduleName = genModuleName(modulePath);
             expr.arguments[0] = quote + './' + moduleName + quote;
         },
@@ -83,8 +85,12 @@ module.exports = function (options) {
         var modules = {};
         _.forEach(files, function(file) {
             var moduleName = genModuleName(path.relative(prefix, file.path));
-            var code = replaceRequires(file.contents);
-            modules[moduleName] = code;
+            try {
+                var code = replaceRequires(prefix, file.path, file.contents);
+                modules[moduleName] = code;
+            } catch (e) {
+                cb(e);
+            }
         });
 
         var req = https.request({
@@ -108,7 +114,7 @@ module.exports = function (options) {
                 data = JSON.parse(data);
 
                 if (data.ok) {
-                    gutil.log('Commited to Screeps account.');
+                    gutil.log('Commited to Screeps account on branch `' + options.branch + '`');
                 } else {
                     gutil.log('Error while commiting to Screeps: ' + util.inspect(data));
                 }

@@ -15,31 +15,49 @@ export default class City implements Storable {
     get room(): Room { return this.spawn.room; }
     get memory(): any { return this.spawn.memory; }
 
+    get populationCount(): number { return this.citizens.length; }
+
     tick() {
-        // STEP 1: Tick factory
+        // Cleanup dead citizens
+        let [deads, alives] = _.partition(this.citizens, (citizen) => citizen.isDead);
+        this.citizens = alives;
+        for (let dead of deads) {
+            dead.cleanup();
+        }
+
+        // Tick factory
         this.factory.tick();
 
-        // STEP 2: Tick citizens
+        // Tick citizens
         for (let citizen of this.citizens) {
             citizen.tick();
         }
     }
 
+    createCitizen(name: string): Citizen {
+        let citizen = new Citizen(this, name);
+        this.citizens.push(citizen);
+        return citizen;
+    }
+
     /* Storable */
     save() {
-        this.memory.citizens = _.map(this.citizens, (citizen) => {
-            return citizen.name;
-        });
+        this.memory.citizens = _.map(this.citizens, (citizen) => citizen.name);
+        for (let citizen of this.citizens) {
+            citizen.save();
+        }
+        this.factory.save();
     }
 
     load() {
         let citizens = this.memory.citizens || [];
         for (let name of citizens) {
-            let creep = Game.creeps[name];
-            let citizen = new Citizen(this, creep);
+            let citizen = new Citizen(this, name);
             citizen.load();
             this.citizens.push(citizen);
         }
+
+        this.factory.load();
     }
 
     /* Statics */

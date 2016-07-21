@@ -5,6 +5,8 @@ var ts = require('gulp-typescript'),
     screeps = require('./gulp-screeps');
 var secrets = require('./secrets.json');
 
+require('gulp-stats')(gulp);
+
 function upload(branch) {
     return screeps({
         email: secrets.email,

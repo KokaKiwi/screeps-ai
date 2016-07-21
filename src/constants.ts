@@ -1,6 +1,6 @@
 const CONSTANTS = {
-    factory: {
-        maxPopulation: 10,
+    city: {
+        maxPopulation: 20,
     },
 };
 

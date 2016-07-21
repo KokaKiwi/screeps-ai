@@ -21,6 +21,7 @@
     "gulp-concat": "^2.6.0",
     "gulp-order": "^1.1.1",
     "gulp-screeps": "file:gulp-screeps",
+    "gulp-stats": "0.0.3",
     "gulp-typescript": "^2.13.6",
     "yargs": "^4.8.1"
   }
